@@ -23,10 +23,19 @@ candH <- candidates %>%
         filter(cand_office == "H") %>%
         select(cand_id, cand_name, cand_party_affiliation, cand_election_yr)
 
-elections <- house_elections %>%
-            select(candidate_name:ge_winner) 
+names(house_elections)[names(house_elections) == "fec_id"] <- "cand_id"
 
+elections <- house_elections %>%
+            select(cand_id, primary_votes:ge_winner)
+           
 contrib <- contributions %>%
           select(transaction_amt, cand_id)
+
+table1 <- candH %>%
+          full_join(elections, by = "cand_id") %>%
+          filter(!is.na(ge_winner)) 
+table2 <- table1 %>%
+          full_join(contrib, by = "cand_id")
+
 ```
 
