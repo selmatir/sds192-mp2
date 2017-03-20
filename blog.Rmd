@@ -14,4 +14,13 @@ load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
+
+library(dplyr)
 ```
+
+```{r}
+candH <- candidates %>%
+        filter(cand_office == "H") %>%
+        select(cand_id, cand_name, cand_party_affiliation, cand_election_yr)
+```
+
