@@ -22,5 +22,11 @@ library(dplyr)
 candH <- candidates %>%
         filter(cand_office == "H") %>%
         select(cand_id, cand_name, cand_party_affiliation, cand_election_yr)
+
+elections <- house_elections %>%
+            select(candidate_name:ge_winner) 
+
+contrib <- contributions %>%
+          select(transaction_amt, cand_id)
 ```
 
