@@ -46,7 +46,10 @@ summary <- table2 %>%
           filter(!is.na(total_money))
 
 plot1 <- ggplot(data=summary, aes(x=total_votes, y=total_money)) +
-        geom_point() 
+        geom_point() +
+        ggtitle("Correlation between the number of votes and contributions \n a candidate to the House elections received") +
+        xlab("Number of Votes") +
+        ylab("Amount of Contribution")
 
 plot1
 
