@@ -16,18 +16,18 @@ load("committees.rda")
 load("contributions.rda")
 
 library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 candH <- candidates %>%
         filter(cand_office == "H") %>%
         select(cand_id, cand_name, cand_party_affiliation, cand_election_yr)
-
 names(house_elections)[names(house_elections) == "fec_id"] <- "cand_id"
-
 elections <- house_elections %>%
             select(cand_id, primary_votes:ge_winner)
-           
 contrib <- contributions %>%
           select(transaction_amt, cand_id)
 
@@ -47,9 +47,14 @@ summary <- table2 %>%
 
 plot1 <- ggplot(data=summary, aes(x=total_votes, y=total_money)) +
         geom_point() +
-        ggtitle("Correlation between the number of votes and contributions \n a candidate to the House elections received") +
-        xlab("Number of Votes") +
-        ylab("Amount of Contribution")
+        geom_smooth(method = "lm") +
+        ggtitle("Correlation between the number of votes and contributions \na candidate to the House elections received") +
+        xlab("Number of Votes (millions)") +
+        ylab("Amount of Contribution (millions of dollars)") +
+        theme_economist() +
+        scale_x_continuous(limits=c(0,420000000), breaks=c(0,100000000,200000000,300000000,400000000), labels = c("0","100","200","300","400")) +
+       scale_y_continuous(limits=c(0,8000000), breaks=c(0,2000000,4000000,6000000),labels=c("0","2","4","6")) 
+      
 
 plot1
 
