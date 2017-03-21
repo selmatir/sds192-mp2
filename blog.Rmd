@@ -34,8 +34,21 @@ contrib <- contributions %>%
 table1 <- candH %>%
           full_join(elections, by = "cand_id") %>%
           filter(!is.na(ge_winner)) 
+
 table2 <- table1 %>%
-          full_join(contrib, by = "cand_id")
+          full_join(contrib, by = "cand_id") %>%
+          arrange(cand_name)
+
+summary <- table2 %>%
+          group_by(cand_name) %>%
+          summarise(total_money = sum(transaction_amt),
+                    total_votes = sum(primary_votes + runoff_votes + general_votes)) %>%
+          filter(!is.na(total_money))
+
+plot1 <- ggplot(data=summary, aes(x=total_votes, y=total_money)) +
+        geom_point() 
+
+plot1
 
 ```
 
