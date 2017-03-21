@@ -37,16 +37,14 @@ table1 <- candH %>%
 
 table2 <- table1 %>%
           full_join(contrib, by = "cand_id") %>%
-          arrange(cand_name)
-
-summary <- table2 %>%
+          arrange(cand_name) %>%
           group_by(cand_name) %>%
-          summarise(total_money = sum(transaction_amt),
+          mutate(total_money = sum(transaction_amt),
                     total_votes = sum(primary_votes + runoff_votes + general_votes)) %>%
           filter(!is.na(total_money))
 
-plot1 <- ggplot(data=summary, aes(x=total_votes, y=total_money)) +
-        geom_point() +
+plot1 <- ggplot(data=table2, aes(x=total_votes, y=total_money)) +
+        geom_point(aes(colour=cand_party_affiliation)) +
         geom_smooth(method = "lm") +
         ggtitle("Correlation between the number of votes and contributions \na candidate to the House elections received") +
         xlab("Number of Votes (millions)") +
