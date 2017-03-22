@@ -23,12 +23,16 @@ library(ggthemes)
 
 ```{r, message=FALSE, warning=FALSE}
 candH <- candidates %>%
-        filter(cand_office == "H") %>%
+        filter(cand_office == "H", cand_office_state == "CA") %>%
         select(cand_id, cand_name, cand_party_affiliation, cand_election_yr)
+
 names(house_elections)[names(house_elections) == "fec_id"] <- "cand_id"
+
 elections <- house_elections %>%
-            select(cand_id, primary_votes:ge_winner)
+            select(cand_id, general_votes, ge_winner)
+
 contrib <- contributions %>%
+          filter(transaction_type == "24E") %>%
           select(transaction_amt, cand_id)
 
 table1 <- candH %>%
@@ -40,21 +44,31 @@ table2 <- table1 %>%
           arrange(cand_name) %>%
           group_by(cand_name) %>%
           mutate(total_money = sum(transaction_amt),
-                    total_votes = sum(primary_votes + runoff_votes + general_votes)) %>%
-          filter(!is.na(total_money))
+                  total_votes = sum(general_votes)) %>%
+          filter(cand_party_affiliation== "DEM" | cand_party_affiliation=="REP", !is.na(total_money))
 
 plot1 <- ggplot(data=table2, aes(x=total_votes, y=total_money)) +
-        geom_point(aes(colour=cand_party_affiliation)) +
+        geom_point(aes(colour=cand_party_affiliation, shape=ge_winner)) +
         geom_smooth(method = "lm") +
         ggtitle("Correlation between the number of votes and contributions \na candidate to the House elections received") +
         xlab("Number of Votes (millions)") +
         ylab("Amount of Contribution (millions of dollars)") +
         theme_economist() +
-        scale_x_continuous(limits=c(0,420000000), breaks=c(0,100000000,200000000,300000000,400000000), labels = c("0","100","200","300","400")) +
-       scale_y_continuous(limits=c(0,8000000), breaks=c(0,2000000,4000000,6000000),labels=c("0","2","4","6")) 
+        scale_x_continuous(limits=c(0,16000000), breaks=c(0,10000000,16000000), labels = c("0","10","16")) +
+       scale_y_continuous(limits=c(0,3600000), breaks=c(0,2000000,3600000),labels=c("0","2","4")) +
+        scale_color_discrete(name = "party") +
+        theme(legend.title = element_text(size = 11),
+              legend.text = element_text(size = 9),
+              legend.position = "right",
+              axis.title = element_text(size = 11))
       
 
 plot1
 
 ```
 
+filter:
+california
+24E transactions: Independent expenditure advocating election of candidate
+house elections
+candidates from DEM and REP parties
