@@ -54,8 +54,8 @@ plot1 <- ggplot(data=table2, aes(x=total_votes, y=total_money)) +
         xlab("Number of Votes (millions)") +
         ylab("Amount of Contribution (millions of dollars)") +
         theme_economist() +
-        scale_x_continuous(limits=c(0,16000000), breaks=c(0,10000000,16000000), labels = c("0","10","16")) +
-       scale_y_continuous(limits=c(0,3600000), breaks=c(0,2000000,3600000),labels=c("0","2","4")) +
+        scale_x_continuous(limits=c(0,15000000), breaks=c(0,10000000,15000000), labels = c("0","10","15")) +
+       scale_y_continuous(limits=c(0,3200000), breaks=c(0,1000000, 2000000,3000000),labels=c("0","1","2", "3")) +
         scale_color_discrete(name = "party") +
         theme(legend.title = element_text(size = 11),
               legend.text = element_text(size = 9),
