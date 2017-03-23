@@ -62,8 +62,27 @@ plot1 <- ggplot(data=table2, aes(x=total_votes, y=total_money)) +
               legend.position = "right",
               axis.title = element_text(size = 11))
       
-
 plot1
+
+
+
+gen_el_table <- table2 %>%
+  filter(cand_election_yr == "2012", general_votes > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP") %>%
+  select(cand_id, cand_name, cand_party_affiliation, general_votes, ge_winner, transaction_amt) %>%
+  group_by(cand_id, cand_name, cand_party_affiliation, general_votes, ge_winner) %>%
+  summarize(total_money = sum(transaction_amt))
+
+
+plot2 <- ggplot(data=gen_el_table, aes(x=general_votes, y=total_money)) +
+  geom_point(aes(colour=cand_party_affiliation, shape=ge_winner)) +
+  ggtitle("Number of Votes and Contributions \nin California General Election") +
+  xlab("Number of Votes (in 100,000)") +
+  ylab("Contribution to Candidate (in millions of dollars)") +
+  theme_economist() +
+  scale_x_continuous(limits=c(0, 300000), breaks=c(0, 150000, 300000), labels=c("0", "1.5", "3")) +
+  scale_y_continuous(limits=c(0, 3200000), breaks=c(0, 1000000, 2000000, 3000000), labels=c("0", "1", "2", "3")) + scale_color_discrete(name = "party")
+
+plot2
 
 ```
 
