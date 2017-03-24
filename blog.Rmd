@@ -53,9 +53,8 @@ plotscale <- function(Upper_Limit, Y_Title, YBreak1, YBreak2, YBreak3, YBreak4, 
         xlab("Number of Votes (thousands)") +
         ylab(Y_Title) +
         theme_economist() +
-        scale_color_discrete(name = "party") +
-        scale_shape_discrete(name = "election's outcome") +
-        scale_color_manual(labels = c("DEM", "REP"), values = c("#0006CC", "#CC0000")) +
+        scale_color_manual(name = "Party", labels = c("DEM", "REP"), values = c("#0006CC", "#CC0000")) +
+        scale_shape_discrete(name = "Election's outcome", labels = c("Loss", "Win")) +
         scale_x_continuous(limits=c(0,220000), breaks=c(0,100000,200000), labels = c("0","100","200")) +
         scale_y_continuous(limits=c(0,Upper_Limit), breaks=c(YBreak1, YBreak2, YBreak3, YBreak4, YBreak5, YBreak6), labels=c(YLab1, YLab2, YLab3, YLab4, YLab5, YLab6)) +
         theme(plot.title = element_text(hjust = 0.5),
