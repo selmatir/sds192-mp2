@@ -23,16 +23,17 @@ library(ggthemes)
 
 ```{r, message=FALSE, warning=FALSE}
 candH <- candidates %>%
-        filter(cand_office == "H", cand_office_state == "CA") %>%
+        filter(cand_office == "H", cand_office_state == "NY") %>%
         select(cand_id, cand_name, cand_party_affiliation, cand_election_yr)
 
 names(house_elections)[names(house_elections) == "fec_id"] <- "cand_id"
 
 elections <- house_elections %>%
-            select(cand_id, general_votes, ge_winner)
+            select(cand_id, general_votes, ge_winner) %>%
+            filter(general_votes > 0)
 
 contrib <- contributions %>%
-          filter(transaction_type == "24E") %>%
+          filter(transaction_type == "24E", transaction_amt > 0) %>%
           select(transaction_amt, cand_id)
 
 table1 <- candH %>%
@@ -41,53 +42,44 @@ table1 <- candH %>%
 
 table2 <- table1 %>%
           full_join(contrib, by = "cand_id") %>%
-          arrange(cand_name) %>%
           group_by(cand_name) %>%
-          mutate(total_money = sum(transaction_amt),
-                  total_votes = sum(general_votes)) %>%
+          mutate(total_money = sum(transaction_amt)) %>%
           filter(cand_party_affiliation== "DEM" | cand_party_affiliation=="REP", !is.na(total_money))
 
-plot1 <- ggplot(data=table2, aes(x=total_votes, y=total_money)) +
-        geom_point(aes(colour=cand_party_affiliation, shape=ge_winner)) +
-        geom_smooth(method = "lm") +
-        ggtitle("Correlation between the number of votes and contributions \na candidate to the House elections received") +
-        xlab("Number of Votes (millions)") +
+plotscale <- function(X) {
+            ggplot(data=table2, aes(x=general_votes, y=total_money)) +
+        geom_point(aes(colour=cand_party_affiliation, shape=ge_winner), size=2.5) +
+        ggtitle("Number of Votes and Contributions in \nNew York General House Election") +
+        xlab("Number of Votes (thousands)") +
         ylab("Amount of Contribution (millions of dollars)") +
         theme_economist() +
-        scale_x_continuous(limits=c(0,15000000), breaks=c(0,10000000,15000000), labels = c("0","10","15")) +
-       scale_y_continuous(limits=c(0,3200000), breaks=c(0,1000000, 2000000,3000000),labels=c("0","1","2", "3")) +
         scale_color_discrete(name = "party") +
-        theme(legend.title = element_text(size = 11),
+        scale_shape_discrete(name = "election's outcome") +
+        scale_color_manual(labels = c("DEM", "REP"), values = c("#0006CC", "#CC0000")) +
+        scale_x_continuous(limits=c(0,220000), breaks=c(0,100000,200000), labels = c("0","100","200")) +
+        scale_y_continuous(limits=c(0,X), breaks=c(0,250000,500000,750000,1000000), labels=c("0","0.25","0.5","0.75", "1")) +
+        theme(plot.title = element_text(hjust = 0.5),
+              legend.title = element_text(size = 11),
               legend.text = element_text(size = 9),
               legend.position = "right",
               axis.title = element_text(size = 11))
-      
-plot1
+}
 
+plotscale(1300000)
 
-
-gen_el_table <- table2 %>%
-  filter(cand_election_yr == "2012", general_votes > 0, cand_party_affiliation == "DEM" | cand_party_affiliation == "REP") %>%
-  select(cand_id, cand_name, cand_party_affiliation, general_votes, ge_winner, transaction_amt) %>%
-  group_by(cand_id, cand_name, cand_party_affiliation, general_votes, ge_winner) %>%
-  summarize(total_money = sum(transaction_amt))
-
-
-plot2 <- ggplot(data=gen_el_table, aes(x=general_votes, y=total_money)) +
-  geom_point(aes(colour=cand_party_affiliation, shape=ge_winner)) +
-  ggtitle("Number of Votes and Contributions \nin California General Election") +
-  xlab("Number of Votes (in 100,000)") +
-  ylab("Contribution to Candidate (in millions of dollars)") +
-  theme_economist() +
-  scale_x_continuous(limits=c(0, 300000), breaks=c(0, 150000, 300000), labels=c("0", "1.5", "3")) +
-  scale_y_continuous(limits=c(0, 3200000), breaks=c(0, 1000000, 2000000, 3000000), labels=c("0", "1", "2", "3")) + scale_color_discrete(name = "party")
-
-plot2
+plotscale(500000)
 
 ```
+This graph represents the relationship between the number of votes (in thousands) and the independent expenditure advocating the election of the candidate(in millions of dollars) republicans and democrates obtained for the 2012 General House election in New York state. 
+The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. 
+The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Another layer of information concerning the party of the candidate has been mapped to the visual dimension color and the outcome of th election has been mapped to the visual dimension shape. 
 
-filter:
-california
-24E transactions: Independent expenditure advocating election of candidate
-house elections
-candidates from DEM and REP parties
+What can we learn?
+  - Republicans got more contributions than democrats 
+  - Democrates got more votes than republicans
+  - More democrates ran for the house election, and hence more democrates were elected
+  - The two candidates who got the biggest amount of contribution were not elected. 
+  
+We can observe a negative corrolation between the number of votes and contributions a candidate obtained. Indeed, the candidates who won the election with the biggest number of votes, were the ones who got inferior contributions. This result is interesting since it contrats with the general idea that a candidate with more funds will be able to get more votes. Here, it seems like the 0.5 million dollars separating the two candidates with the most contributions from th eother candidates did not allow them to get more votes. 
+
+The graph allows us to see that there were more democrates running for the 2012 house election than republicans; and there were hence more democrates elected. This highlights the general idea that New York is more of a democratic state.
