@@ -1,6 +1,6 @@
 ---
 title: "Mini-Project 2"
-author: "Your Name Here"
+author: "Emma Dennis-Knieriem & Selma Tir"
 date: "March 24, 2017"
 output: html_document
 ---
@@ -69,9 +69,14 @@ plotscale(1300000, "Amount of Contribution (in millions of dollars)", 0, 250000,
 plotscale(500000, "Amount of Contribution (in thousands of dollars)", 0, 100000, 200000, 300000, 400000, 500000, 0, 100, 200, 300, 400, 500)
 
 ```
+
+
+
+
+
 This graph represents the relationship between the number of votes (in thousands) and the independent expenditure advocating the election of the candidate(in millions of dollars) republicans and democrates obtained for the 2012 General House election in New York state. 
 The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. 
-The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Another layer of information concerning the party of the candidate has been mapped to the visual dimension color and the outcome of th election has been mapped to the visual dimension shape. 
+The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Another layer of information concerning the party of the candidate has been mapped to the visual dimension color and the outcome of the election has been mapped to the visual dimension shape. 
 
 What can we learn?
   - Republicans got more contributions than democrats 
@@ -82,3 +87,6 @@ What can we learn?
 We can observe a negative corrolation between the number of votes and contributions a candidate obtained. Indeed, the candidates who won the election with the biggest number of votes, were the ones who got inferior contributions. This result is interesting since it contrats with the general idea that a candidate with more funds will be able to get more votes. Here, it seems like the 0.5 million dollars separating the two candidates with the most contributions from th eother candidates did not allow them to get more votes. 
 
 The graph allows us to see that there were more democrates running for the 2012 house election than republicans; and there were hence more democrates elected. This highlights the general idea that New York is more of a democratic state.
+
+Background:
+As of November 2012, the democratic party hold 21 seats while the republican party only hold 8. As of after the 2012 house elections, the democratic party hold the same number of seats while the republicans lost 2 seats. 
