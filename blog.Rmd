@@ -5,9 +5,7 @@ date: "March 24, 2017"
 output: html_document
 ---
 
-
-## Loading the data
-
+##Title
 
 ```{r, include=FALSE}
 load("house_elections.rda")
@@ -46,6 +44,8 @@ table2 <- table1 %>%
           mutate(total_money = sum(transaction_amt)) %>%
           filter(cand_party_affiliation== "DEM" | cand_party_affiliation=="REP", !is.na(total_money))
 
+#Comment?
+
 plotscale <- function(Upper_Limit, Y_Title, YBreak1, YBreak2, YBreak3, YBreak4, YBreak5, YBreak6, YLab1, YLab2, YLab3, YLab4, YLab5, YLab6) {
             ggplot(data=table2, aes(x=general_votes, y=total_money)) +
         geom_point(aes(colour=cand_party_affiliation, shape=ge_winner), size=2.5) +
@@ -61,8 +61,7 @@ plotscale <- function(Upper_Limit, Y_Title, YBreak1, YBreak2, YBreak3, YBreak4, 
               legend.title = element_text(size = 11),
               legend.text = element_text(size = 9),
               legend.position = "right",
-              axis.title = element_text(size = 11))
-}
+              axis.title = element_text(size = 11))}
 
 plotscale(1300000, "Amount of Contribution (in millions of dollars)", 0, 250000, 500000, 750000, 1000000, 1250000, 0, 0.25, 0.50, 0.75, 1.00, 1.25)
 
@@ -70,10 +69,13 @@ plotscale(500000, "Amount of Contribution (in thousands of dollars)", 0, 100000,
 
 ```
 
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 9fa2ba99c2014a58ea772dbcbce31cd379d72e27
 This graph represents the relationship between the number of votes (in thousands) and the independent expenditure advocating the election of the candidate(in millions of dollars) republicans and democrates obtained for the 2012 General House election in New York state. 
 The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. 
 The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Another layer of information concerning the party of the candidate has been mapped to the visual dimension color and the outcome of the election has been mapped to the visual dimension shape. 
