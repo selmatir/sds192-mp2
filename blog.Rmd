@@ -46,18 +46,18 @@ table2 <- table1 %>%
           mutate(total_money = sum(transaction_amt)) %>%
           filter(cand_party_affiliation== "DEM" | cand_party_affiliation=="REP", !is.na(total_money))
 
-plotscale <- function(X) {
+plotscale <- function(Upper_Limit, Y_Title, YBreak1, YBreak2, YBreak3, YBreak4, YBreak5, YBreak6, YLab1, YLab2, YLab3, YLab4, YLab5, YLab6) {
             ggplot(data=table2, aes(x=general_votes, y=total_money)) +
         geom_point(aes(colour=cand_party_affiliation, shape=ge_winner), size=2.5) +
         ggtitle("Number of Votes and Contributions in \nNew York General House Election") +
         xlab("Number of Votes (thousands)") +
-        ylab("Amount of Contribution (millions of dollars)") +
+        ylab(Y_Title) +
         theme_economist() +
         scale_color_discrete(name = "party") +
         scale_shape_discrete(name = "election's outcome") +
         scale_color_manual(labels = c("DEM", "REP"), values = c("#0006CC", "#CC0000")) +
         scale_x_continuous(limits=c(0,220000), breaks=c(0,100000,200000), labels = c("0","100","200")) +
-        scale_y_continuous(limits=c(0,X), breaks=c(0,250000,500000,750000,1000000), labels=c("0","0.25","0.5","0.75", "1")) +
+        scale_y_continuous(limits=c(0,Upper_Limit), breaks=c(YBreak1, YBreak2, YBreak3, YBreak4, YBreak5, YBreak6), labels=c(YLab1, YLab2, YLab3, YLab4, YLab5, YLab6)) +
         theme(plot.title = element_text(hjust = 0.5),
               legend.title = element_text(size = 11),
               legend.text = element_text(size = 9),
@@ -65,9 +65,9 @@ plotscale <- function(X) {
               axis.title = element_text(size = 11))
 }
 
-plotscale(1300000)
+plotscale(1300000, "Amount of Contribution (in millions of dollars)", 0, 250000, 500000, 750000, 1000000, 1250000, 0, 0.25, 0.50, 0.75, 1.00, 1.25)
 
-plotscale(500000)
+plotscale(500000, "Amount of Contribution (in thousands of dollars)", 0, 100000, 200000, 300000, 400000, 500000, 0, 100, 200, 300, 400, 500)
 
 ```
 This graph represents the relationship between the number of votes (in thousands) and the independent expenditure advocating the election of the candidate(in millions of dollars) republicans and democrates obtained for the 2012 General House election in New York state. 
