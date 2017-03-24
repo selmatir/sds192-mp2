@@ -69,13 +69,7 @@ plotscale(500000, "Amount of Contribution (in thousands of dollars)", 0, 100000,
 
 ```
 
-<<<<<<< HEAD
 
-
-
-
-=======
->>>>>>> 9fa2ba99c2014a58ea772dbcbce31cd379d72e27
 This graph represents the relationship between the number of votes (in thousands) and the independent expenditure advocating the election of the candidate(in millions of dollars) republicans and democrates obtained for the 2012 General House election in New York state. 
 The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. 
 The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Another layer of information concerning the party of the candidate has been mapped to the visual dimension color and the outcome of the election has been mapped to the visual dimension shape. 
