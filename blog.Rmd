@@ -1,6 +1,6 @@
 ---
 title: "Mini-Project 2"
-author: "Emma Dennis-Knieriem & Selma Tir"
+author: "Selma Tir & Emma Dennis-Knieriem"
 date: "March 24, 2017"
 output: html_document
 ---
@@ -8,11 +8,14 @@ output: html_document
 ##Title
 
 ```{r, include=FALSE}
+
+#Loading the data
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 
+#Loading packages
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
@@ -20,32 +23,38 @@ library(ggthemes)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
+
+#From 'candidates', filter only the candidates running for seats in the House of Representative for the state of New York and select ID, name, party affiliation, and election year.
 candH <- candidates %>%
         filter(cand_office == "H", cand_office_state == "NY") %>%
         select(cand_id, cand_name, cand_party_affiliation, cand_election_yr)
 
+#Rename ID variable from "house_elections" data frame as the same string from previous frame, allowing a join of these two frames by this variable.
 names(house_elections)[names(house_elections) == "fec_id"] <- "cand_id"
 
+#From 'house_elections', select ID, number of votes from general election, and whether or not each candidate won the general election. Assuming that candidates who got zero votes in the general election did not make it past primary elections, and filter these candidates out.
 elections <- house_elections %>%
             select(cand_id, general_votes, ge_winner) %>%
             filter(general_votes > 0)
 
+#From 'contributions', filter transaction type '24E', the independent expenditure advocating the election of a candidate. Select only the transaction amount and the candidate ID.
 contrib <- contributions %>%
           filter(transaction_type == "24E", transaction_amt > 0) %>%
           select(transaction_amt, cand_id)
 
+#Joining data frames containing information about the candidates (name, party affiliations, etc.) and general election results (number of votes received, whether or not each candidate won).
 table1 <- candH %>%
           full_join(elections, by = "cand_id") %>%
           filter(!is.na(ge_winner)) 
 
+#Joining previous data frame with contribution information to show the total money each candidate received. Filter only the candidates who ran as a democrat or a republican.
 table2 <- table1 %>%
           full_join(contrib, by = "cand_id") %>%
           group_by(cand_name) %>%
           mutate(total_money = sum(transaction_amt)) %>%
           filter(cand_party_affiliation== "DEM" | cand_party_affiliation=="REP", !is.na(total_money))
 
-#Comment?
-
+#Define function 'plotscale', which creates a plot of 'Amount of Contribution' vs. 'Number of Votes'. This allows multiple plots to be generated from 'table2' when passed upper limit (y-axis), title, break, and label parameters. The x-axis is fixed for easy comparisons between plots made by this function.
 plotscale <- function(Upper_Limit, Y_Title, YBreak1, YBreak2, YBreak3, YBreak4, YBreak5, YBreak6, YLab1, YLab2, YLab3, YLab4, YLab5, YLab6) {
             ggplot(data=table2, aes(x=general_votes, y=total_money)) +
         geom_point(aes(colour=cand_party_affiliation, shape=ge_winner), size=2.5) +
@@ -63,26 +72,23 @@ plotscale <- function(Upper_Limit, Y_Title, YBreak1, YBreak2, YBreak3, YBreak4, 
               legend.position = "right",
               axis.title = element_text(size = 11))}
 
-plotscale(1300000, "Amount of Contribution (in millions of dollars)", 0, 250000, 500000, 750000, 1000000, 1250000, 0, 0.25, 0.50, 0.75, 1.00, 1.25)
+#Generate two plots using 'plotscale' function. The first plot includes the observations from 'table2'.
+plotscale(1300000, "Amount of Contribution (in millions of dollars)", 0, 250000, 500000, 750000, 1000000, 1250000, 0, 0.25, "0.50", 0.75, "1.00", 1.25)
 
+#Using 'plotscale', generate a plot that is like the first one, but zoomed in on the clustered data, removing outliers who received lots of contributions.
 plotscale(500000, "Amount of Contribution (in thousands of dollars)", 0, 100000, 200000, 300000, 400000, 500000, 0, 100, 200, 300, 400, 500)
 
 ```
-
-
-This graph represents the relationship between the number of votes (in thousands) and the independent expenditure advocating the election of the candidate(in millions of dollars) republicans and democrates obtained for the 2012 General House election in New York state. 
-The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. 
-The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Another layer of information concerning the party of the candidate has been mapped to the visual dimension color and the outcome of the election has been mapped to the visual dimension shape. 
-
-What can we learn?
-  - Republicans got more contributions than democrats 
-  - Democrates got more votes than republicans
-  - More democrates ran for the house election, and hence more democrates were elected
-  - The two candidates who got the biggest amount of contribution were not elected. 
   
-We can observe a negative corrolation between the number of votes and contributions a candidate obtained. Indeed, the candidates who won the election with the biggest number of votes, were the ones who got inferior contributions. This result is interesting since it contrats with the general idea that a candidate with more funds will be able to get more votes. Here, it seems like the 0.5 million dollars separating the two candidates with the most contributions from th eother candidates did not allow them to get more votes. 
+According to these data, most of the candidates who were elected by New York state to the House of Representatives in 2012 were democrats who received less than $100,000 in contributions for their campaign.
 
-The graph allows us to see that there were more democrates running for the 2012 house election than republicans; and there were hence more democrates elected. This highlights the general idea that New York is more of a democratic state.
+This graph shows the relationship between the number of votes (in thousands) and the amount of contribution (independent expenditure advocating the election of the candidate) democrats and replublicans received for the 2012 General House election in New York state. 
+  
+The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. 
+The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Party affiliation has been mapped to the visual dimension color, with blue for democrats and red for republicans, as is traditional in United States politics. The outcome of the election has been mapped to the visual dimension shape with "Win" represented by a triangle and "Loss" represented by a cirlce.
 
-Background:
-As of November 2012, the democratic party hold 21 seats while the republican party only hold 8. As of after the 2012 house elections, the democratic party hold the same number of seats while the republicans lost 2 seats. 
+While the average contribution a republican candidate received was higher than that of a democrat, it appears that the average number of votes a democrat received was higher than that of a republican candidate. It is unsurprising that since more democrats were in the general election, more democrats that repubicans won seats. However, it appears that a higher proportion of democrats won their seats than republicans. Additionally, two observations in the mid-range for number of votes but outliers for amount of contribution, each received over one million dollars for their campaign, but did not win seats in the House in the general election. A possible reason is because New York state generally votes for democrats, or "votes blue". Here, the proportion of democrats to republicans (blue to red points) looks much higher than one, so it is not surprising that of the republican candidates that won in the primary election, not many won in the general election (only five).
+  
+One would expect that the more money a candidate receives in contributions, the more liked that candidate is and the more votes they are able to win with increased campaign funds. However, these plots disprove that theory with empirical data. Many of the candidates who won the election with the greatest number of votes (about 175,000 and higher) received some of the smallest amounts of contribution (about 25,000 and under). Here, it seems like the 0.5 million dollars separating the two candidates with the most contributions from th eother candidates did not allow them to get more votes.
+
+As of November 2012, the democratic party held 21 seats from New York in the House of Representatives while the republican party only hold 8. As of after the 2012 house elections, the democratic party hold the same number of seats while the republicans lost 2 seats.
