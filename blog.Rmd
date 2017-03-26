@@ -97,7 +97,7 @@ Additionally, the two republican outliers who each received half a million dolla
 ####Any surprises?
 One would expect that the more campaign funds a candidate receives, the more votes he or she also obtains. However, the two graphs disprove this theory with empirical data. 
 
-Indeed, most of the candidates who won the election with the greatest number of votes (about 175,000 and higher) received some of the smallest amounts of contribution (about 25,000 and under).
+Indeed, most of the candidates who won the election with the greatest number of votes (about 175,000 and higher) received some of the smallest amounts of contribution (about $25,000 and under).
 
 The influence of contributions on the outcome of an election is hence more convoluted and can not be expressed by a simple correlation between money and votes. 
 
