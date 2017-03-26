@@ -1,14 +1,17 @@
 ---
 title: "Mini-Project 2"
 author: "Selma Tir & Emma Dennis-Knieriem"
-date: "March 24, 2017"
+date: "March 26, 2017"
 output: html_document
 ---
 
-##Title
+##2012 General House Election in New York
+
+
+####The Data
+The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Party affiliation has been mapped to the visual dimension color, with blue for democrats and red for republicans, as is traditional in United States politics. The outcome of the election has been mapped to the visual dimension shape with "Win" represented by a triangle and "Loss" represented by a cirlce.
 
 ```{r, include=FALSE}
-
 #Loading the data
 load("house_elections.rda")
 load("candidates.rda")
@@ -23,7 +26,6 @@ library(ggthemes)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
-
 #From 'candidates', filter only the candidates running for seats in the House of Representative for the state of New York and select ID, name, party affiliation, and election year.
 candH <- candidates %>%
         filter(cand_office == "H", cand_office_state == "NY") %>%
@@ -71,24 +73,31 @@ plotscale <- function(Upper_Limit, Y_Title, YBreak1, YBreak2, YBreak3, YBreak4, 
               legend.text = element_text(size = 9),
               legend.position = "right",
               axis.title = element_text(size = 11))}
-
+```
+####The Graph
+  
+```{r, message=FALSE, warning=FALSE}
 #Generate two plots using 'plotscale' function. The first plot includes the observations from 'table2'.
 plotscale(1300000, "Amount of Contribution (in millions of dollars)", 0, 250000, 500000, 750000, 1000000, 1250000, 0, 0.25, "0.50", 0.75, "1.00", 1.25)
 
 #Using 'plotscale', generate a plot that is like the first one, but zoomed in on the clustered data, removing outliers who received lots of contributions.
 plotscale(500000, "Amount of Contribution (in thousands of dollars)", 0, 100000, 200000, 300000, 400000, 500000, 0, 100, 200, 300, 400, 500)
-
 ```
-  
-According to these data, most of the candidates who were elected by New York state to the House of Representatives in 2012 were democrats who received less than $100,000 in contributions for their campaign.
 
-This graph shows the relationship between the number of votes (in thousands) and the amount of contribution (independent expenditure advocating the election of the candidate) democrats and replublicans received for the 2012 General House election in New York state. 
-  
-The data was obtained from the Federal Election Commission based on the 2011-2012 federal election cycle. 
-The number of votes and amount of contribution variables have been mapped to the visual dimension position using a scatterplot. Party affiliation has been mapped to the visual dimension color, with blue for democrats and red for republicans, as is traditional in United States politics. The outcome of the election has been mapped to the visual dimension shape with "Win" represented by a triangle and "Loss" represented by a cirlce.
+These graphs show the relationship between the number of votes (in thousands) and the amount of contribution (independent expenditure advocating the election of the candidate) democrats and replublicans received for the 2012 General House election in New York state. 
 
-While the average contribution a republican candidate received was higher than that of a democrat, it appears that the average number of votes a democrat received was higher than that of a republican candidate. It is unsurprising that since more democrats were in the general election, more democrats that repubicans won seats. However, it appears that a higher proportion of democrats won their seats than republicans. Additionally, two observations in the mid-range for number of votes but outliers for amount of contribution, each received over one million dollars for their campaign, but did not win seats in the House in the general election. A possible reason is because New York state generally votes for democrats, or "votes blue". Here, the proportion of democrats to republicans (blue to red points) looks much higher than one, so it is not surprising that of the republican candidates that won in the primary election, not many won in the general election (only five).
-  
-One would expect that the more money a candidate receives in contributions, the more liked that candidate is and the more votes they are able to win with increased campaign funds. However, these plots disprove that theory with empirical data. Many of the candidates who won the election with the greatest number of votes (about 175,000 and higher) received some of the smallest amounts of contribution (about 25,000 and under). Here, it seems like the 0.5 million dollars separating the two candidates with the most contributions from th eother candidates did not allow them to get more votes.
 
-As of November 2012, the democratic party held 21 seats from New York in the House of Representatives while the republican party only hold 8. As of after the 2012 house elections, the democratic party hold the same number of seats while the republicans lost 2 seats.
+####What can we learn?
+According to these data, most of the candidates who were elected by New York state to the House of Representatives in 2012 were democrats who received less than $100,000 in contributions for their campaign. While the average contribution a republican candidate received was higher than that of a democrat, it appears like the average number of votes a democrat received was higher than that of a republican candidate. It is unsurprising that democrats won more seats than republicans since more democrats ran for the general election. 
+
+However, the graphs show that more democrats rewon their seats. As of November 2012, the democratic party from New York held 21 seats in the House of Representatives, while the republican party only hold 8. As of after the 2012 house elections, the democratic party held the same number of seats while the republicans lost 2 seats.
+
+Additionally, the two republican outliers who each received half a million dollars more than the other candidates did not win seats to the House of Representatives. The fact that New York state generally votes for democrats, or "votes blue", might explian this discrepancy. 
+
+####Any surprises?
+One would expect that the more campaign funds a candidate receives, the more votes he or she also obtains. However, the two graphs disprove this theory with empirical data. 
+
+Indeed, most of the candidates who won the election with the greatest number of votes (about 175,000 and higher) received some of the smallest amounts of contribution (about 25,000 and under).
+
+The influence of contributions on the outcome of an election is hence more convoluted and can not be expressed by a simple correlation between money and votes. 
+
